@@ -3,7 +3,6 @@ package com.example.myapplicationv3;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,25 +16,13 @@ public class MainActivity extends AppCompatActivity {
         Button buttonSchedule = findViewById(R.id.button_schedule);
         Button buttonSettings = findViewById(R.id.button_settings);
 
-        buttonCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CalendarActivity.class));
-            }
-        });
+        buttonCalendar.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, CalendarActivity.class)));
 
-        buttonSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ScheduleActivity.class));
-            }
-        });
+        buttonSchedule.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ScheduleActivity.class)));
 
-        buttonSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
+        buttonSettings.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
     }
 }
