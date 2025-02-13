@@ -1,6 +1,5 @@
 package com.example.myapplicationv3;
 
-import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.widget.Button;
@@ -27,7 +26,7 @@ public class CalendarActivity extends AppCompatActivity {
         calendarView = findViewById(R.id.calendar_view);
         editTextNote = findViewById(R.id.edit_text_note);
         buttonSaveNote = findViewById(R.id.button_save_note);
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.button_close);
         dbHelper = new DatabaseHelper(this);
 
         // Получаем сегодняшнюю дату
@@ -76,8 +75,7 @@ public class CalendarActivity extends AppCompatActivity {
             editTextNote.setText("");
         }
 
-        buttonBack.setOnClickListener(v ->
-                startActivity(new Intent(CalendarActivity.this, MainActivity.class)));
+        buttonBack.setOnClickListener(v -> finish());
     }
 
     private int getCalendarDate(){

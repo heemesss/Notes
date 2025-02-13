@@ -4,25 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/radio_group"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/radio_lessons"
+        <Button
+            android:id="@+id/button_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Уроки"
-            android:checked="true"/>
+            android:text="Назад" />
 
-        <RadioButton
-            android:id="@+id/radio_time"
+        <RadioGroup
+            android:id="@+id/radio_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Время уроков"/>
-    </RadioGroup>
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_lessons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Уроки" />
+
+            <RadioButton
+                android:id="@+id/radio_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Время уроков" />
+        </RadioGroup>
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/list_view"

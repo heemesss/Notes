@@ -1,11 +1,14 @@
 package com.example.myapplicationv3;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                String lesson = cursor.getString(cursor.getColumnIndex(getColumnName(day)));
+                @SuppressLint("Range") String lesson = cursor.getString(cursor.getColumnIndex(getColumnName(day)));
                 if (!lesson.isEmpty()) {
                     lessons += lesson + "\n";
                 }
@@ -182,12 +185,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Метод для добавления нового урока
-    public void addLesson(String lesson) {
+    public void setLesson(String lesson) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_LESSON, lesson);
+        db.delete(TABLE_LESSONS, null, null);
 
-        db.insert(TABLE_LESSONS, null, values);
+        ContentValues values = new ContentValues();
+        for (String s: lesson.split("\n")) {
+            if (s.isEmpty())
+                continue;
+            values.put(COLUMN_LESSON, s);
+            Log.i(TAG, "setLesson: " + s);
+            db.insert(TABLE_LESSONS, null, values);
+        }
+        db.close();
+    }
+
+    public void setTimes(String times) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SCHEDULE_TIME, null, null);
+
+        ContentValues values = new ContentValues();
+        for (String s: times.split("\n")) {
+            if (s.isEmpty())
+                continue;
+            values.put(COLUMN_TIME, s);
+            Log.i(TAG, "setTimes: " + s);
+            db.insert(TABLE_SCHEDULE_TIME, null, values);
+        }
         db.close();
     }
 
@@ -207,6 +231,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return lessons;
+    }
+
+    public List<String> getAllTimes() {
+        List<String> times = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
+                new String[]{COLUMN_TIME}, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
+                times.add(time);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return times;
     }
 
     // Метод для очистки базы данных

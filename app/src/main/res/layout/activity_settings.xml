@@ -1,58 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Названия уроков:"/>
-
-        <EditText
-            android:id="@+id/edit_text_lesson_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Введите название урока"
-            android:inputType="text"
-            android:minHeight="48dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button_add_lesson"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Добавить урок"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Расписание уроков:"/>
-
-        <TableLayout
-            android:id="@+id/table_layout_schedule"
+            android:id="@+id/button_list_lessons"
             android:layout_width="match_parent"
-            android:layout_height="111dp"
-            android:stretchColumns="*">
-
-            <!-- Столбцы будут добавлены программно -->
-
-        </TableLayout>
+            android:layout_height="wrap_content"
+            android:text="Список уроков" />
 
         <Button
-            android:id="@+id/button_clear_database"
-            android:layout_width="wrap_content"
+            android:id="@+id/button_schedule_lessons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="16dp"
-            android:text="Очистить базу данных"/>
+            android:text="Расписание уроков" />
+
+        <Button
+            android:id="@+id/button_schedule_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Расписание звонков" />
 
     </LinearLayout>
 
-</ScrollView>
+    <Button
+        android:id="@+id/button_clear_database"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Очистить данные"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <Button
+        android:id="@+id/button_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

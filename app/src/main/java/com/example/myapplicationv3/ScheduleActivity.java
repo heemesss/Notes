@@ -1,7 +1,7 @@
 package com.example.myapplicationv3;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
@@ -15,6 +15,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private ListView listView;
     private DatabaseHelper dbHelper;
+    private Button buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         radioGroup = findViewById(R.id.radio_group);
         listView = findViewById(R.id.list_view);
+        buttonBack = findViewById(R.id.button_back);
         dbHelper = new DatabaseHelper(this);
 
         loadLessons();
@@ -30,13 +32,15 @@ public class ScheduleActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (findViewById(R.id.radio_lessons).isActivated()){
+                if (findViewById(R.id.radio_lessons).getId() == checkedId){
                     loadLessons();
                 } else {
                     loadTimes();
                 }
             }
         });
+
+        buttonBack.setOnClickListener(v -> finish());
     }
 
     private void loadLessons() {
