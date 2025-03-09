@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_SCHEDULE_LESSONS =
             "CREATE TABLE " + TABLE_SCHEDULE_LESSONS + "(" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    COLUMN_ID + " INTEGER PRIMARY KEY," +
                     COLUMN_MONDAY + " TEXT," +
                     COLUMN_TUESDAY + " TEXT," +
                     COLUMN_WEDNESDAY + " TEXT," +
@@ -246,8 +247,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
+        db.close();
         cursor.close();
         return times;
+    }
+
+    public void setScheduleLessons(List<List<EditText>> scheduleLessons) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        db.delete(TABLE_SCHEDULE_LESSONS, null, null);
+        boolean isRef = false;
+
+        for (int i = 0; i < scheduleLessons.size(); i++) {
+            values.put(COLUMN_ID, i);
+            for (int j = 0; j < scheduleLessons.get(i).size(); j++) {
+                String lessons = String.valueOf(scheduleLessons.get(i).get(j).getText());
+                if (lessons.isEmpty())
+                    continue;
+                values.put(getColumnName(j + 1), lessons);
+                isRef = true;
+            }
+            if (isRef){
+                db.insert(TABLE_SCHEDULE_LESSONS, null, values);
+                values.clear();
+                isRef = false;
+            }
+        }
+        db.close();
+    }
+
+    @SuppressLint("Range")
+    public List<List<String>> getScheduleLessons() {
+        List<List<String>> lessons = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_SCHEDULE_LESSONS,
+                new String[]{COLUMN_MONDAY, COLUMN_TUESDAY, COLUMN_WEDNESDAY, COLUMN_THURSDAY,
+                        COLUMN_FRIDAY, COLUMN_SATURDAY, COLUMN_SUNDAY},
+                null, null, null, null, null);
+
+        try {
+            for (int i = 0; i < 7; i++) {
+                lessons.add(new ArrayList<>());
+                if (cursor.isLast())
+                    break;
+                cursor.moveToPosition(i);
+                for (int day = 1; day < 8; day++) {
+                    lessons.get(i).add(cursor.getString(cursor.getColumnIndex(getColumnName(day))));
+
+                }
+            }
+        } catch (Exception e) {
+            Log.i(TAG, "getScheduleLessons: " + e);
+        }
+        db.close();
+        cursor.close();
+
+        return lessons;
     }
 
     // Метод для очистки базы данных

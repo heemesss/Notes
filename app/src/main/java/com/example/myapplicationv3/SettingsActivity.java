@@ -3,10 +3,14 @@ package com.example.myapplicationv3;
 import static android.content.ContentValues.TAG;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -14,6 +18,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -115,23 +120,37 @@ public class SettingsActivity extends AppCompatActivity {
         // ToDo
 
         tableLayoutSchedule.removeAllViews();
-
-        List<String> lessons = dbHelper.getAllLessons();
-        if (lessons.size() > 0) {
-            TableRow headerRow = new TableRow(this);
-            headerRow.setGravity(Gravity.CENTER_HORIZONTAL);
-            addHeaderCell(headerRow, "День");
-            addHeaderCell(headerRow, "Урок");
-            tableLayoutSchedule.addView(headerRow);
-
-            for (int i = 1; i <= 7; i++) {
-                TableRow row = new TableRow(this);
-                row.setGravity(Gravity.CENTER_HORIZONTAL);
-                addDataCell(row, getDayName(i));
-                addDataCell(row, lessons.get(i - 1)); // Уроков может быть больше, чем дней
-                tableLayoutSchedule.addView(row);
-            }
+        TableRow headerRow = new TableRow(this);
+        headerRow.setGravity(Gravity.CENTER_HORIZONTAL);
+        addHeaderCell(headerRow, "№");
+        for (int i = 1; i < 8; i++){
+            addHeaderCell(headerRow, getDayName(i));
         }
+        tableLayoutSchedule.addView(headerRow);
+        List<List<String>> list = dbHelper.getScheduleLessons();
+        Log.i(TAG, "setScheduleLesson: " + list.toString());
+        List<List<EditText>> editTextList = new ArrayList<>();
+        for (int i = 1 ; i < 8; i++){
+            TableRow tableRow = new TableRow(this);
+            addDataCell(tableRow, "" + i);
+            editTextList.add(new ArrayList<>());
+            for (int j = 0; j < 7; j++){
+                EditText editText = new EditText(this);
+                if (list.size() > i - 1){
+                    if (list.get(i - 1).size() > j){
+                        editText.setText(list.get(i - 1).get(j));
+                        Log.i(TAG, "setScheduleLesson: " + list.get(i - 1).get(j));
+                    }
+                }
+                editTextList.get(i - 1).add(editText);
+                editText.setBackground(ColorDrawable.createFromPath("#FFFFFF"));
+                tableRow.addView(editText);
+            }
+            tableLayoutSchedule.addView(tableRow);
+        }
+
+        buttonSaveAndExit.setOnClickListener(v -> {dbHelper.setScheduleLessons(editTextList);
+            setSettings();});
 
     }
 
