@@ -66,8 +66,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_SCHEDULE_TIME =
             "CREATE TABLE " + TABLE_SCHEDULE_TIME + "(" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_TIME + " TEXT NOT NULL)";
+                    COLUMN_ID + " INTEGER PRIMARY KEY," +
+                    COLUMN_MONDAY + " TEXT," +
+                    COLUMN_TUESDAY + " TEXT," +
+                    COLUMN_WEDNESDAY + " TEXT," +
+                    COLUMN_THURSDAY + " TEXT," +
+                    COLUMN_FRIDAY + " TEXT," +
+                    COLUMN_SATURDAY + " TEXT," +
+                    COLUMN_SUNDAY + " TEXT)";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -143,25 +149,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Метод для получения времени уроков по дню
-    public String getTimesForDay(int day) {
-        String times = "";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
-                new String[]{COLUMN_TIME},
-                null, null, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
-                if (!time.isEmpty()) {
-                    times += time + "\n";
-                }
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        return times.trim(); // Убираем последний символ переноса строки
-    }
+//    public String getTimesForDay(int day) {
+//        String times = "";
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
+//                new String[]{COLUMN_TIME},
+//                null, null, null, null, null);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
+//                if (!time.isEmpty()) {
+//                    times += time + "\n";
+//                }
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//        return times.trim(); // Убираем последний символ переноса строки
+//    }
 
     // Вспомогательный метод для получения имени столбца по номеру дня
     private String getColumnName(int day) {
@@ -201,20 +207,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void setTimes(String times) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_SCHEDULE_TIME, null, null);
-
-        ContentValues values = new ContentValues();
-        for (String s: times.split("\n")) {
-            if (s.isEmpty())
-                continue;
-            values.put(COLUMN_TIME, s);
-            Log.i(TAG, "setTimes: " + s);
-            db.insert(TABLE_SCHEDULE_TIME, null, values);
-        }
-        db.close();
-    }
+//    public void setTimes(String times) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.delete(TABLE_SCHEDULE_TIME, null, null);
+//
+//        ContentValues values = new ContentValues();
+//        for (String s: times.split("\n")) {
+//            if (s.isEmpty())
+//                continue;
+//            values.put(COLUMN_TIME, s);
+//            Log.i(TAG, "setTimes: " + s);
+//            db.insert(TABLE_SCHEDULE_TIME, null, values);
+//        }
+//        db.close();
+//    }
 
     // Метод для получения всех уроков
     public List<String> getAllLessons() {
@@ -234,23 +240,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return lessons;
     }
 
-    public List<String> getAllTimes() {
-        List<String> times = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
-                new String[]{COLUMN_TIME}, null, null, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
-                times.add(time);
-            } while (cursor.moveToNext());
-        }
-
-        db.close();
-        cursor.close();
-        return times;
-    }
+//    public List<String> getAllTimes() {
+//        List<String> times = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
+//                new String[]{COLUMN_TIME}, null, null, null, null, null);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                @SuppressLint("Range") String time = cursor.getString(cursor.getColumnIndex(COLUMN_TIME));
+//                times.add(time);
+//            } while (cursor.moveToNext());
+//        }
+//
+//        db.close();
+//        cursor.close();
+//        return times;
+//    }
 
     public void setScheduleLessons(List<List<EditText>> scheduleLessons) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -303,6 +309,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return lessons;
+    }
+
+    public void setTimes(List<List<EditText>> times) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        db.delete(TABLE_SCHEDULE_TIME, null, null);
+        boolean isRef = false;
+
+        for (int i = 0; i < times.size(); i++) {
+            values.put(COLUMN_ID, i);
+            for (int j = 0; j < times.get(i).size(); j++) {
+                String time = String.valueOf(times.get(i).get(j).getText());
+                if (time.isEmpty())
+                    continue;
+                values.put(getColumnName(j + 1), time);
+                isRef = true;
+            }
+            if (isRef){
+                db.insert(TABLE_SCHEDULE_TIME, null, values);
+                values.clear();
+                isRef = false;
+            }
+        }
+        db.close();
+    }
+
+    @SuppressLint("Range")
+    public List<List<String>> getTimes() {
+        List<List<String>> times = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
+                new String[]{COLUMN_MONDAY, COLUMN_TUESDAY, COLUMN_WEDNESDAY, COLUMN_THURSDAY,
+                        COLUMN_FRIDAY, COLUMN_SATURDAY, COLUMN_SUNDAY},
+                null, null, null, null, null);
+
+        try {
+            for (int i = 0; i < 7; i++) {
+                times.add(new ArrayList<>());
+                if (cursor.isLast())
+                    break;
+                cursor.moveToPosition(i);
+                for (int day = 1; day < 8; day++) {
+                    times.get(i).add(cursor.getString(cursor.getColumnIndex(getColumnName(day))));
+
+                }
+            }
+        } catch (Exception e) {
+            Log.i(TAG, "getScheduleLessons: " + e);
+        }
+        db.close();
+        cursor.close();
+
+        return times;
     }
 
     // Метод для очистки базы данных

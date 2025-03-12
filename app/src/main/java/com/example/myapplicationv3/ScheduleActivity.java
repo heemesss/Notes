@@ -80,10 +80,21 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void loadTimes() {
         List<Map<String, String>> data = new ArrayList<>();
+        List<List<String>> lessons = dbHelper.getTimes();
         for (int i = 1; i <= 7; i++) {
             Map<String, String> item = new HashMap<>();
             item.put("day", getDayName(i));
-            item.put("times", dbHelper.getTimesForDay(i));
+            String less = "";
+            if (lessons.size() >= i){
+                for (int index = 0; index < lessons.get(i - 1).size(); index++){
+                    String s = lessons.get(i - 1).get(index);
+                    if (s != null)
+                        less = less + (index + 1) + ". " + s + "\n";
+                    else
+                        less = less + (index + 1) + ". " +  "---\n";
+                }
+            }
+            item.put("lessons", less);
             data.add(item);
         }
 
@@ -91,7 +102,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 this,
                 data,
                 android.R.layout.simple_list_item_2,
-                new String[]{"day", "times"},
+                new String[]{"day", "lessons"},
                 new int[]{android.R.id.text1, android.R.id.text2});
 
         listView.setAdapter(adapter);

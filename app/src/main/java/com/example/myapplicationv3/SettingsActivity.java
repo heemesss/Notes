@@ -156,20 +156,60 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setScheduleTime(){
+//        setContentView(R.layout.activity_schedule_time);
+//        buttonBack = findViewById(R.id.button_back);
+//        buttonSaveAndExit = findViewById(R.id.button_save_and_exit);
+//        textEdit = findViewById(R.id.editTextTime);
+//        String times = "";
+//        for (String s : dbHelper.getAllTimes()) {
+//            times = times + s + "\n";
+//        }
+//        textEdit.setText(times.trim());
+//
+//        buttonBack.setOnClickListener(v -> setSettings());
+//
+//        buttonSaveAndExit.setOnClickListener(v -> {dbHelper.setTimes(String.valueOf(textEdit.getText()));
+//            Log.i(TAG, "setScheduleTime: " + textEdit.getText());setSettings();});
         setContentView(R.layout.activity_schedule_time);
         buttonBack = findViewById(R.id.button_back);
         buttonSaveAndExit = findViewById(R.id.button_save_and_exit);
-        textEdit = findViewById(R.id.editTextTime);
-        String times = "";
-        for (String s : dbHelper.getAllTimes()) {
-            times = times + s + "\n";
-        }
-        textEdit.setText(times.trim());
+        tableLayoutSchedule = findViewById(R.id.table_layout_schedule);
 
         buttonBack.setOnClickListener(v -> setSettings());
+        // ToDo
 
-        buttonSaveAndExit.setOnClickListener(v -> {dbHelper.setTimes(String.valueOf(textEdit.getText()));
-            Log.i(TAG, "setScheduleTime: " + textEdit.getText());setSettings();});
+        tableLayoutSchedule.removeAllViews();
+        TableRow headerRow = new TableRow(this);
+        headerRow.setGravity(Gravity.CENTER_HORIZONTAL);
+        addHeaderCell(headerRow, "№");
+        for (int i = 1; i < 8; i++){
+            addHeaderCell(headerRow, getDayName(i));
+        }
+        tableLayoutSchedule.addView(headerRow);
+        List<List<String>> list = dbHelper.getTimes();
+//        Log.i(TAG, "setScheduleLesson: " + list.toString());
+        List<List<EditText>> editTextList = new ArrayList<>();
+        for (int i = 1 ; i < 8; i++){
+            TableRow tableRow = new TableRow(this);
+            addDataCell(tableRow, "" + i);
+            editTextList.add(new ArrayList<>());
+            for (int j = 0; j < 7; j++){
+                EditText editText = new EditText(this);
+                if (list.size() > i - 1){
+                    if (list.get(i - 1).size() > j){
+                        editText.setText(list.get(i - 1).get(j));
+//                        Log.i(TAG, "setScheduleLesson: " + list.get(i - 1).get(j));
+                    }
+                }
+                editTextList.get(i - 1).add(editText);
+                editText.setBackground(ColorDrawable.createFromPath("#FFFFFF"));
+                tableRow.addView(editText);
+            }
+            tableLayoutSchedule.addView(tableRow);
+        }
+
+        buttonSaveAndExit.setOnClickListener(v -> {dbHelper.setTimes(editTextList);
+            setSettings();});
     }
 
     private void addHeaderCell(TableRow row, String text) {
