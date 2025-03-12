@@ -123,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Метод для получения уроков по дню
     public String getLessonsForDay(int day) {
-        String lessons = "";
+        StringBuilder lessons = new StringBuilder();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_SCHEDULE_LESSONS,
                 new String[]{getColumnName(day)},
@@ -133,13 +133,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 @SuppressLint("Range") String lesson = cursor.getString(cursor.getColumnIndex(getColumnName(day)));
                 if (!lesson.isEmpty()) {
-                    lessons += lesson + "\n";
+                    lessons.append(lesson).append("\n");
                 }
             } while (cursor.moveToNext());
         }
 
         cursor.close();
-        return lessons.trim(); // Убираем последний символ переноса строки
+        return lessons.toString().trim(); // Убираем последний символ переноса строки
     }
 
     // Метод для получения времени уроков по дню

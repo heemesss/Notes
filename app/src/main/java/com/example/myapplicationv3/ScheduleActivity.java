@@ -1,6 +1,9 @@
 package com.example.myapplicationv3;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioGroup;
@@ -10,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class ScheduleActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
@@ -45,10 +50,21 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void loadLessons() {
         List<Map<String, String>> data = new ArrayList<>();
+        List<List<String>> lessons = dbHelper.getScheduleLessons();
         for (int i = 1; i <= 7; i++) {
             Map<String, String> item = new HashMap<>();
             item.put("day", getDayName(i));
-            item.put("lessons", dbHelper.getLessonsForDay(i));
+            String less = "";
+            if (lessons.size() >= i){
+                for (int index = 0; index < lessons.get(i - 1).size(); index++){
+                    String s = lessons.get(i - 1).get(index);
+                    if (s != null)
+                        less = less + (index + 1) + ". " + s + "\n";
+                    else
+                        less = less + (index + 1) + ". " +  "---\n";
+                }
+            }
+            item.put("lessons", less);
             data.add(item);
         }
 

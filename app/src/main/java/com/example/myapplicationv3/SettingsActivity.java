@@ -99,6 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
         buttonSaveAndExit = findViewById(R.id.button_save_and_exit);
         textEdit = findViewById(R.id.editTextTime);
         String lessons = "";
+        Log.i(TAG, "setListLesson: " + dbHelper.getAllLessons());
         for (String s : dbHelper.getAllLessons()) {
             lessons = lessons + s + "\n";
         }
