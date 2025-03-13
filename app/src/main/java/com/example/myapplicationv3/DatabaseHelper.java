@@ -292,7 +292,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null, null, null);
 
         try {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 9; i++) {
                 lessons.add(new ArrayList<>());
                 if (cursor.isLast())
                     break;
@@ -345,12 +345,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null, null, null, null, null);
 
         try {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 9; i++) {
                 times.add(new ArrayList<>());
                 if (cursor.isLast())
                     break;
                 cursor.moveToPosition(i);
-                for (int day = 1; day < 8; day++) {
+                for (int day = 1; day < 10; day++) {
                     times.get(i).add(cursor.getString(cursor.getColumnIndex(getColumnName(day))));
 
                 }

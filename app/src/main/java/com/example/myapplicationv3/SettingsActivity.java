@@ -124,18 +124,18 @@ public class SettingsActivity extends AppCompatActivity {
         TableRow headerRow = new TableRow(this);
         headerRow.setGravity(Gravity.CENTER_HORIZONTAL);
         addHeaderCell(headerRow, "№");
-        for (int i = 1; i < 8; i++){
+        for (int i = 1; i < 10; i++){
             addHeaderCell(headerRow, getDayName(i));
         }
         tableLayoutSchedule.addView(headerRow);
         List<List<String>> list = dbHelper.getScheduleLessons();
         Log.i(TAG, "setScheduleLesson: " + list.toString());
         List<List<EditText>> editTextList = new ArrayList<>();
-        for (int i = 1 ; i < 8; i++){
+        for (int i = 1 ; i < 10; i++){
             TableRow tableRow = new TableRow(this);
             addDataCell(tableRow, "" + i);
             editTextList.add(new ArrayList<>());
-            for (int j = 0; j < 7; j++){
+            for (int j = 0; j < 9; j++){
                 EditText editText = new EditText(this);
                 if (list.size() > i - 1){
                     if (list.get(i - 1).size() > j){
@@ -182,18 +182,18 @@ public class SettingsActivity extends AppCompatActivity {
         TableRow headerRow = new TableRow(this);
         headerRow.setGravity(Gravity.CENTER_HORIZONTAL);
         addHeaderCell(headerRow, "№");
-        for (int i = 1; i < 8; i++){
+        for (int i = 1; i < 10; i++){
             addHeaderCell(headerRow, getDayName(i));
         }
         tableLayoutSchedule.addView(headerRow);
         List<List<String>> list = dbHelper.getTimes();
 //        Log.i(TAG, "setScheduleLesson: " + list.toString());
         List<List<EditText>> editTextList = new ArrayList<>();
-        for (int i = 1 ; i < 8; i++){
+        for (int i = 1 ; i < 10; i++){
             TableRow tableRow = new TableRow(this);
             addDataCell(tableRow, "" + i);
             editTextList.add(new ArrayList<>());
-            for (int j = 0; j < 7; j++){
+            for (int j = 0; j < 9; j++){
                 EditText editText = new EditText(this);
                 if (list.size() > i - 1){
                     if (list.get(i - 1).size() > j){

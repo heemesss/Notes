@@ -51,19 +51,21 @@ public class ScheduleActivity extends AppCompatActivity {
     private void loadLessons() {
         List<Map<String, String>> data = new ArrayList<>();
         List<List<String>> lessons = dbHelper.getScheduleLessons();
+
         for (int i = 1; i <= 7; i++) {
             Map<String, String> item = new HashMap<>();
             item.put("day", getDayName(i));
             String less = "";
-            if (lessons.size() >= i){
-                for (int index = 0; index < lessons.get(i - 1).size(); index++){
-                    String s = lessons.get(i - 1).get(index);
-                    if (s != null)
-                        less = less + (index + 1) + ". " + s + "\n";
-                    else
-                        less = less + (index + 1) + ". " +  "---\n";
-                }
+            for (int index = 0; index < 9; index++){
+                String s = null;
+                if (lessons.size() > index && lessons.get(index).size() > i - 1)
+                    s = lessons.get(index).get(i - 1);
+                if (s != null)
+                    less = less + (index + 1) + ". " + s + "\n";
+                else
+                    less = less + (index + 1) + ". " +  "---\n";
             }
+
             item.put("lessons", less);
             data.add(item);
         }
@@ -81,18 +83,18 @@ public class ScheduleActivity extends AppCompatActivity {
     private void loadTimes() {
         List<Map<String, String>> data = new ArrayList<>();
         List<List<String>> lessons = dbHelper.getTimes();
-        for (int i = 1; i <= 7; i++) {
+        for (int i = 1; i <= 9; i++) {
             Map<String, String> item = new HashMap<>();
             item.put("day", getDayName(i));
             String less = "";
-            if (lessons.size() >= i){
-                for (int index = 0; index < lessons.get(i - 1).size(); index++){
-                    String s = lessons.get(i - 1).get(index);
-                    if (s != null)
-                        less = less + (index + 1) + ". " + s + "\n";
-                    else
-                        less = less + (index + 1) + ". " +  "---\n";
-                }
+            for (int index = 0; index < 9; index++){
+                String s = null;
+                if (lessons.size() > index && lessons.get(index).size() > i - 1)
+                    s = lessons.get(index).get(i - 1);
+                if (s != null)
+                    less = less + (index + 1) + ". " + s + "\n";
+                else
+                    less = less + (index + 1) + ". " +  "---\n";
             }
             item.put("lessons", less);
             data.add(item);
