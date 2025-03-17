@@ -78,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void setSettings(){
         setContentView(R.layout.activity_settings);
 
-        buttonListLesson = findViewById(R.id.button_list_lessons);
+//        buttonListLesson = findViewById(R.id.button_list_lessons);
         buttonScheduleLesson = findViewById(R.id.button_schedule_lessons);
         buttonScheduleTime = findViewById(R.id.button_schedule_time);
         buttonClose = findViewById(R.id.button_close);
@@ -86,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        buttonListLesson.setOnClickListener(v -> setListLesson());
+//        buttonListLesson.setOnClickListener(v -> setListLesson());
         buttonScheduleLesson.setOnClickListener(v -> setScheduleLesson());
         buttonScheduleTime.setOnClickListener(v -> setScheduleTime());
         buttonClose.setOnClickListener(v -> finish());
