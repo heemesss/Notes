@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "mydatabase.db";
+    private static final String DATABASE_NAME = "databasev3.db";
     private static final int DATABASE_VERSION = 1;
 
     // Таблица Notes
@@ -287,20 +287,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<List<String>> lessons = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_SCHEDULE_LESSONS,
-                new String[]{COLUMN_MONDAY, COLUMN_TUESDAY, COLUMN_WEDNESDAY, COLUMN_THURSDAY,
-                        COLUMN_FRIDAY, COLUMN_SATURDAY, COLUMN_SUNDAY},
+                new String[]{COLUMN_ID, COLUMN_MONDAY, COLUMN_TUESDAY, COLUMN_WEDNESDAY,
+                        COLUMN_THURSDAY, COLUMN_FRIDAY, COLUMN_SATURDAY, COLUMN_SUNDAY},
                 null, null, null, null, null);
 
         try {
-            for (int i = 0; i < 9; i++) {
+            cursor.moveToFirst();
+            for (int i = 0; i < 10; i++) {
                 lessons.add(new ArrayList<>());
-                if (cursor.isLast())
-                    break;
-                cursor.moveToPosition(i);
+
+                if (cursor.getInt(cursor.getColumnIndex(COLUMN_ID)) > i)
+                    continue;
+
                 for (int day = 1; day < 8; day++) {
                     lessons.get(i).add(cursor.getString(cursor.getColumnIndex(getColumnName(day))));
 
                 }
+                cursor.moveToNext();
             }
         } catch (Exception e) {
             Log.i(TAG, "getScheduleLessons: " + e);
@@ -340,20 +343,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<List<String>> times = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_SCHEDULE_TIME,
-                new String[]{COLUMN_MONDAY, COLUMN_TUESDAY, COLUMN_WEDNESDAY, COLUMN_THURSDAY,
-                        COLUMN_FRIDAY, COLUMN_SATURDAY, COLUMN_SUNDAY},
+                new String[]{COLUMN_ID, COLUMN_MONDAY, COLUMN_TUESDAY, COLUMN_WEDNESDAY,
+                        COLUMN_THURSDAY, COLUMN_FRIDAY, COLUMN_SATURDAY, COLUMN_SUNDAY},
                 null, null, null, null, null);
 
         try {
-            for (int i = 0; i < 9; i++) {
+            cursor.moveToFirst();
+            for (int i = 0; i < 10; i++) {
                 times.add(new ArrayList<>());
-                if (cursor.isLast())
-                    break;
-                cursor.moveToPosition(i);
-                for (int day = 1; day < 10; day++) {
-                    times.get(i).add(cursor.getString(cursor.getColumnIndex(getColumnName(day))));
 
+                if (cursor.getInt(cursor.getColumnIndex(COLUMN_ID)) > i){
+                    continue;
                 }
+                for (int day = 1; day < 8; day++) {
+                    times.get(i).add(cursor.getString(cursor.getColumnIndex(getColumnName(day))));
+                }
+                cursor.moveToNext();
             }
         } catch (Exception e) {
             Log.i(TAG, "getScheduleLessons: " + e);
